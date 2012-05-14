@@ -1,6 +1,10 @@
-.combobox-js-wrapper {
-  position: relative;
+button.combobox-arrow {
+  background: transparent;
+  border: none;
+  margin-left: -22px;
+  font-size: 12px;
+  color: #999;
 }
-.ui-autocomplete {
-  font-size: 13px;
+button.combobox-arrow:hover {
+  color: #333;
 }

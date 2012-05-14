@@ -67,5 +67,6 @@ function combobox_init() {
   
   drupal_add_js(drupal_get_path('module', 'combobox') . '/js/combobox.js');
   drupal_add_js(drupal_get_path('module', 'combobox') . '/js/combobox-behaviors.js');
+  drupal_add_css(drupal_get_path('module', 'combobox') . '/combobox.css');
 
 }

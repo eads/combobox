@@ -13,19 +13,15 @@
         .wrap('<div class="combobox-js-wrapper">')
         .parent();
       
-      var input = $( "<input>" )
+      var input = $( '<input type="text">' )
         .insertAfter( select )
         .val( value )
-        .addClass( "ui-widget ui-widget-content ui-corner-left" );
       
-      var button = $( "<button>" )
+      var button = $( "<button class='combobox-arrow'><i class='icon-chevron-down'></i></button>" )
         .attr( "tabIndex", -1 )
         .attr( "title", "Show All Items" )
         .insertAfter( input )
         .button({
-          icons: {
-            primary: "ui-icon-triangle-1-s"
-          },
           text: false
         });
 
@@ -77,6 +73,9 @@
 
         button.click(function() {
           // close if already visible
+          if ( input.attr('readonly') || input.attr('disabled') ) {
+            return false;
+          }
           if ( input.autocomplete( "widget" ).is( ":visible" ) ) {
             input.autocomplete( "close" );
             return;
