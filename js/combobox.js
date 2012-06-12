@@ -29,6 +29,7 @@
         input.autocomplete({
           delay: 0,
           minLength: 0,
+          autoFocus: true,
           source: function( request, response ) {
             wrapper.addClass('combobox-hover');
             var matcher = new RegExp('(' + $.ui.autocomplete.escapeRegex(request.term) + ')', "i" );
