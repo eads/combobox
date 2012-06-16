@@ -29,18 +29,23 @@
         input.autocomplete({
           delay: 0,
           minLength: 0,
-          autoFocus: true,
+          //autoFocus: true,
           source: function( request, response ) {
-            wrapper.addClass('combobox-hover');
             var matcher = new RegExp('(' + $.ui.autocomplete.escapeRegex(request.term) + ')', "i" );
             response( select.children( "option" ).map(function() {
               var text = $( this ).text();
-              if ( this.value && ( !request.term || matcher.test(text) ) )
+              if ( !request.term || matcher.test(text) ) {
                 return {
                   label: text.replace(matcher, "<strong>$1</strong>"),
                   value: text,
                   option: this
                 };
+              }
+              return {
+                label: text,
+                value: text,
+                option: this
+              };
             }) );
           },
           select: function( event, ui ) {
@@ -49,7 +54,6 @@
               item: ui.item.option
             });
             select.change();
-            wrapper.removeClass('combobox-hover');
           },
           change: function( event, ui ) {
             if ( !ui.item ) {
