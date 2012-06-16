@@ -1,8 +1,5 @@
 (function( $ ) {
   $.widget( "ui.combobox", {
-    options: {
-      show_clear_button: false
-    },
     _create: function() {
       var self = this,
         select = this.element.hide(),
@@ -29,24 +26,30 @@
         input.autocomplete({
           delay: 0,
           minLength: 0,
-          //autoFocus: true,
           source: function( request, response ) {
-            var matcher = new RegExp('(' + $.ui.autocomplete.escapeRegex(request.term) + ')', "i" );
+            var ac = this;
+            var matcher = new RegExp('^(' + $.ui.autocomplete.escapeRegex(request.term) + ')', "i" );
             response( select.children( "option" ).map(function() {
               var text = $( this ).text();
-              if ( !request.term || matcher.test(text) ) {
-                return {
-                  label: text.replace(matcher, "<strong>$1</strong>"),
-                  value: text,
-                  option: this
-                };
-              }
+              var init = false;
               return {
                 label: text,
                 value: text,
                 option: this
               };
             }) );
+          },
+          open: function(event, ui) {
+            var ac = $(this).data('autocomplete');
+            var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex($(this).val()) + "$", "i");
+            ac.widget().children(".ui-menu-item").each(function() {
+              var item = $(this).data("item.autocomplete");
+              ac.menu.next(event);
+              if (matcher.test(item.label) || matcher.test(item.value) || matcher.test(item)) {
+                ac.menu.element.scrollTop(ac.menu.element.scrollTop() + $(this).position().top );
+                return false;
+              }
+            });
           },
           select: function( event, ui ) {
             ui.item.option.selected = true;
@@ -57,7 +60,7 @@
           },
           change: function( event, ui ) {
             if ( !ui.item ) {
-              var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ) + "$", "i" ),
+              var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ), "i" ),
                 valid = false;
               select.children( "option" ).each(function() {
                 if ( $(this).text().match( matcher ) ) {
@@ -86,8 +89,9 @@
             return;
           }
 
-          // pass empty string as value to search for, displaying all results
-          input.autocomplete( "search", "" );
+          // Search for whatever is currently in box when button is
+          // clicked
+          input.autocomplete( "search", input.val() );
           input.focus();
       
           // Don't submit form
@@ -100,6 +104,19 @@
             .append( "<a>" + item.label + "</a>" )
             .appendTo( ul );
         };
+
+        input.bind('keydown', function(e) {
+          if (e.keyCode == 38 || e.keyCode == 40){
+            var ac = $(this).data('autocomplete');
+            var active = $('#ui-active-menuitem');
+            if (e.keyCode == 38 && active.get(0) && active.position && active.position().top < 0) {
+              ac.menu.element.scrollTop( ac.menu.element.scrollTop() + active.position().top );
+            }
+            if (e.keyCode == 40 && active.get(0) && active.parent().next() && active.parent().next().position().top + active.parent().next().height() > ac.menu.element.height()) {
+              ac.menu.element.scrollTop(ac.menu.element.scrollTop() - ac.menu.element.height() + active.parent().next().position().top); 
+            }
+          }
+        });  
       }
       else if (select.attr('readonly') && !select.attr('disabled')) {
         input.attr('readonly', true);
@@ -111,5 +128,6 @@
       }            
     }
   });
+
 })( jQuery );
 
