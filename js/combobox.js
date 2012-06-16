@@ -28,10 +28,8 @@
           minLength: 0,
           source: function( request, response ) {
             var ac = this;
-            var matcher = new RegExp('^(' + $.ui.autocomplete.escapeRegex(request.term) + ')', "i" );
             response( select.children( "option" ).map(function() {
               var text = $( this ).text();
-              var init = false;
               return {
                 label: text,
                 value: text,
