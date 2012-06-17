@@ -28,21 +28,19 @@
           minLength: 0,
           source: function( request, response ) {
             var ac = this;
+            var source_init = true; 
+            var matcher = new RegExp('^(' + $.ui.autocomplete.escapeRegex(request.term) + ')', "i" );
             response( select.children( "option" ).map(function() {
-              var text = $( this ).text();
+              var value = text = $( this ).text();
               return {
                 label: text,
-                value: text,
+                value: value,
                 option: this
               };
-            }) );
-          },
-          open: function(event, ui) {
-            var ac = $(this).data('autocomplete');
-            var matcher = new RegExp("^" + $.ui.autocomplete.escapeRegex($(this).val()) + "$", "i");
-            ac.widget().children(".ui-menu-item").each(function() {
+            }));
+            ac.widget().children(".ui-menu-item").each(function(i) {
               var item = $(this).data("item.autocomplete");
-              ac.menu.next(event);
+              ac.menu.next($.Event('source'));
               if (matcher.test(item.label) || matcher.test(item.value) || matcher.test(item)) {
                 ac.menu.element.scrollTop(ac.menu.element.scrollTop() + $(this).position().top );
                 return false;
@@ -60,6 +58,8 @@
             if ( !ui.item ) {
               var matcher = new RegExp( "^" + $.ui.autocomplete.escapeRegex( $(this).val() ), "i" ),
                 valid = false;
+
+              // Set original field value
               select.children( "option" ).each(function() {
                 if ( $(this).text().match( matcher ) ) {
                   this.selected = valid = true;
