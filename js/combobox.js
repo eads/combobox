@@ -38,6 +38,7 @@
                 option: this
               };
             }));
+            ac.menu.move('first', 'first', $.Event('source'));
             ac.widget().children(".ui-menu-item").each(function(i) {
               var item = $(this).data("item.autocomplete");
               ac.menu.next($.Event('source'));
